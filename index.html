@@ -6,141 +6,78 @@
     <title>너를 위한 밤</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap');
-
-        :root {
-            --bg-color: #0b0e1d;
-            --candle-body: #f1f2f6;
-            --flame-color: #ff9d00;
+        :root { --bg-color: #0b0e1d; --flame-color: #ff9d00; }
+        body { 
+            background: radial-gradient(circle at center, #1b2735 0%, #090a0f 100%); 
+            color: white; margin: 0; height: 100vh; 
+            display: flex; flex-direction: column; align-items: center; justify-content: flex-start; 
+            overflow: hidden; font-family: 'Nanum Pen Script', cursive; 
         }
-
-        body {
-            background: radial-gradient(circle at center, #1b2735 0%, #090a0f 100%);
-            color: white;
-            margin: 0;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            font-family: 'Nanum Pen Script', cursive;
+        .star { position: absolute; background: white; border-radius: 50%; opacity: 0.5; animation: twinkle var(--duration) infinite ease-in-out; }
+        @keyframes twinkle { 0%, 100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 1; transform: scale(1.2); box-shadow: 0 0 10px white; } }
+        
+        h2 { font-size: 2rem; margin-top: 60px; margin-bottom: 40px; text-shadow: 0 0 15px rgba(255, 255, 255, 0.6); z-index: 10; text-align: center; }
+        
+        .candle-container { display: flex; gap: 40px; margin-bottom: 50px; z-index: 10; }
+        .candle { cursor: pointer; position: relative; transition: 0.3s; }
+        .flame { width: 16px; height: 26px; background: var(--flame-color); border-radius: 50% 50% 20% 20%; margin: 0 auto; box-shadow: 0 0 20px 5px var(--flame-color); animation: flicker 0.15s infinite alternate; }
+        .stick { width: 20px; height: 60px; background: linear-gradient(to right, #e0e0e0, #ffffff, #d0d0d0); border-radius: 4px; margin: 0 auto; }
+        .candle.off .flame { opacity: 0; transform: scale(0); transition: 0.4s ease-out; }
+        
+        #letter { 
+            position: fixed; top: 30%; left: 50%; transform: translate(-50%, -50%); 
+            background: #fff9e6; color: #333; padding: 20px 30px; border-radius: 2px; 
+            box-shadow: 5px 5px 20px rgba(0,0,0,0.4); display: none; z-index: 100; 
+            font-size: 1.6rem; text-align: center; border-left: 8px solid #d4af37; 
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); max-width: 80%; 
         }
-
-        /* 밤하늘 별 효과 */
-        .star {
-            position: absolute;
-            background: white;
-            border-radius: 50%;
-            opacity: 0.5;
-            animation: twinkle var(--duration) infinite ease-in-out;
+        @keyframes popIn { 0% { opacity: 0; transform: translate(-50%, -20%) scale(0.5); } 100% { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
+        
+        /* 책상과 서랍 위치 조정 */
+        .desk-wrapper { position: relative; width: 220px; margin-top: 20px; z-index: 5; }
+        .desk-top { height: 15px; background: #4e342e; border-radius: 4px; position: relative; z-index: 6; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        .drawer { 
+            width: 190px; height: 60px; background: #3e2723; margin: 0 auto; 
+            border: 2px solid #2d1d19; border-top: none; position: relative; 
+            transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1); 
+            display: flex; justify-content: center; top: -2px;
         }
-
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.3; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.2); box-shadow: 0 0 10px white; }
-        }
-
-        /* 가이드 텍스트 */
-        h2 {
-            font-size: 2rem;
-            margin-bottom: 60px;
-            text-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
-            z-index: 10;
-        }
-
-        /* 촛불 구역 */
-        .candle-container {
-            display: flex;
-            gap: 50px;
-            margin-bottom: 120px;
-            z-index: 10;
-        }
-
-        .candle {
-            cursor: pointer;
-            position: relative;
-            transition: 0.3s;
-        }
-
-        .candle:hover { transform: translateY(-5px); }
-
-        .flame {
-            width: 18px;
-            height: 28px;
-            background: var(--flame-color);
-            border-radius: 50% 50% 20% 20%;
-            margin: 0 auto;
-            box-shadow: 0 0 20px 5px var(--flame-color), 0 0 40px 10px rgba(255, 157, 0, 0.3);
-            animation: flicker 0.15s infinite alternate;
-        }
-
-        .stick {
-            width: 24px;
-            height: 70px;
-            background: linear-gradient(to right, #e0e0e0, #ffffff, #d0d0d0);
-            border-radius: 4px;
-            margin: 0 auto;
-        }
-
-        /* 촛불 꺼짐 상태 */
-        .candle.off .flame {
-            opacity: 0;
-            transform: scale(0);
-            transition: 0.4s ease-out;
-        }
-
-        /* 편지 팝업 */
-        #letter {
-            position: fixed;
-            top: 40%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: #fff9e6;
-            color: #333;
-            padding: 25px 40px;
-            border-radius: 2px;
-            box-shadow: 5px 5px 20px rgba(0,0,0,0.4);
-            display: none;
-            z-index: 100;
-            font-size: 1.6rem;
-            text-align: center;
-            border-left: 10px solid #d4af37;
-
-            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32,
-                                               animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        @keyframes popIn {
-            0% { opacity: 0; transform: translate(-50%, -20%) scale(0.5); }
-            100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-        }
-
-        /* 책상과 서랍 */
-        .desk-wrapper { position: relative; width: 220px; z-index: 5; }
-        .desk-top { height: 15px; background: #4e342e; border-radius: 4px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
-        .drawer { width: 190px; height: 60px; background: #3e2723; margin: 0 auto; border: 2px solid #2d1d19; border-top: none; position: relative; transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1); display: flex; justify-content: center; }
-        .handle { width: 40px; height: 8px; background: #b8860b; border-radius: 10px; margin-top: 15px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.3); }
-        .drawer.open { transform: translateY(50px); }
-        .heart { position: absolute; font-size: 60px; bottom: 10px; opacity: 0; z-index: -1; filter: drop-shadow(0 0 10px #ff4d4d); }
+        .handle { width: 40px; height: 8px; background: #b8860b; border-radius: 10px; margin-top: 20px; }
+        
+        /* 서랍이 열릴 때 더 많이 내려오도록 수정 */
+        .drawer.open { transform: translateY(60px); }
+        
+        .heart { position: absolute; font-size: 60px; bottom: 10px; opacity: 0; z-index: -1; filter: drop-shadow(0 0 15px #ff4d4d); }
         .heart.rise { animation: heartRise 3s forwards ease-out; z-index: 20; }
-
+        
         @keyframes flicker { 0% { transform: rotate(-1deg) scale(1); } 100% { transform: rotate(1deg) scale(1.1); } }
-        @keyframes heartRise { 0% { opacity: 0; transform: scale(0.5) translateY(0); } 20% { opacity: 1; } 100% { opacity: 1; transform: scale(2) translateY(-350px); } }
+        @keyframes heartRise { 
+            0% { opacity: 0; transform: scale(0.5) translateY(0); } 
+            20% { opacity: 1; } 
+            100% { opacity: 1; transform: scale(2.5) translateY(-400px); } 
+        }
     </style>
 </head>
 <body>
     <div id="star-field"></div>
-    <h2 id="guide">어두운 밤, 세 개의 촛불을 꺼줘...</h2>
+    <h2 id="guide">고요한 밤...<br>세 개의 촛불을 꺼보세요</h2>
+    
     <div class="candle-container">
-        <div class="candle" onclick="off(this, '첫 번째 조각: 넌 나의 소중한 사람이야')"><div class="flame"></div><div class="stick"></div></div>
-        <div class="candle" onclick="off(this, '두 번째 조각: 언제나 네 편이 되어줄게')"><div class="flame"></div><div class="stick"></div></div>
-        <div class="candle" onclick="off(this, '마지막 조각: 서랍 속을 확인해봐!')"><div class="flame"></div><div class="stick"></div></div>
+        <div class="candle" onclick="off(this, '안녕 !!')"><div class="flame"></div><div class="stick"></div></div>
+        <div class="candle" onclick="off(this, '뭐해 ?')"><div class="flame"></div><div class="stick"></div></div>
+        <div class="candle" onclick="off(this, '잘 자')"><div class="flame"></div><div class="stick"></div></div>
     </div>
+    
     <div id="letter"></div>
+    
     <div class="desk-wrapper">
         <div class="desk-top"></div>
-        <div id="drawer" class="drawer"><div class="handle"></div><div id="heart" class="heart">❤️</div></div>
+        <div id="drawer" class="drawer">
+            <div class="handle"></div>
+            <div id="heart" class="heart">❤️</div>
+        </div>
     </div>
+
     <script>
         const starField = document.getElementById('star-field');
         for (let i = 0; i < 80; i++) {
@@ -153,6 +90,7 @@
             star.style.setProperty('--duration', (Math.random() * 3 + 2) + 's');
             starField.appendChild(star);
         }
+
         let count = 0;
         function off(el, text) {
             if(el.classList.contains('off')) return;
@@ -162,9 +100,10 @@
             letter.innerText = text;
             letter.style.display = 'block';
             setTimeout(() => { letter.style.display = 'none'; }, 2000);
+            
             if(count === 3) {
                 setTimeout(() => {
-                    document.getElementById('guide').innerText = "마음이 도착했어!";
+                    document.getElementById('guide').innerHTML = "서랍에서 마음이 나왔어요!";
                     document.getElementById('drawer').classList.add('open');
                     setTimeout(() => { document.getElementById('heart').classList.add('rise'); }, 600);
                 }, 1200);
