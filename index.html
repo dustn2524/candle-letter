@@ -105,4 +105,71 @@
             font-size: 1.6rem;
             text-align: center;
             border-left: 10px solid #d4af37;
+
             animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32,
+                                               animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn {
+            0% { opacity: 0; transform: translate(-50%, -20%) scale(0.5); }
+            100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        }
+
+        /* 책상과 서랍 */
+        .desk-wrapper { position: relative; width: 220px; z-index: 5; }
+        .desk-top { height: 15px; background: #4e342e; border-radius: 4px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        .drawer { width: 190px; height: 60px; background: #3e2723; margin: 0 auto; border: 2px solid #2d1d19; border-top: none; position: relative; transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1); display: flex; justify-content: center; }
+        .handle { width: 40px; height: 8px; background: #b8860b; border-radius: 10px; margin-top: 15px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.3); }
+        .drawer.open { transform: translateY(50px); }
+        .heart { position: absolute; font-size: 60px; bottom: 10px; opacity: 0; z-index: -1; filter: drop-shadow(0 0 10px #ff4d4d); }
+        .heart.rise { animation: heartRise 3s forwards ease-out; z-index: 20; }
+
+        @keyframes flicker { 0% { transform: rotate(-1deg) scale(1); } 100% { transform: rotate(1deg) scale(1.1); } }
+        @keyframes heartRise { 0% { opacity: 0; transform: scale(0.5) translateY(0); } 20% { opacity: 1; } 100% { opacity: 1; transform: scale(2) translateY(-350px); } }
+    </style>
+</head>
+<body>
+    <div id="star-field"></div>
+    <h2 id="guide">어두운 밤, 세 개의 촛불을 꺼줘...</h2>
+    <div class="candle-container">
+        <div class="candle" onclick="off(this, '첫 번째 조각: 넌 나의 소중한 사람이야')"><div class="flame"></div><div class="stick"></div></div>
+        <div class="candle" onclick="off(this, '두 번째 조각: 언제나 네 편이 되어줄게')"><div class="flame"></div><div class="stick"></div></div>
+        <div class="candle" onclick="off(this, '마지막 조각: 서랍 속을 확인해봐!')"><div class="flame"></div><div class="stick"></div></div>
+    </div>
+    <div id="letter"></div>
+    <div class="desk-wrapper">
+        <div class="desk-top"></div>
+        <div id="drawer" class="drawer"><div class="handle"></div><div id="heart" class="heart">❤️</div></div>
+    </div>
+    <script>
+        const starField = document.getElementById('star-field');
+        for (let i = 0; i < 80; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            const size = Math.random() * 3 + 'px';
+            star.style.width = size; star.style.height = size;
+            star.style.top = Math.random() * 100 + '%';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.setProperty('--duration', (Math.random() * 3 + 2) + 's');
+            starField.appendChild(star);
+        }
+        let count = 0;
+        function off(el, text) {
+            if(el.classList.contains('off')) return;
+            el.classList.add('off');
+            count++;
+            const letter = document.getElementById('letter');
+            letter.innerText = text;
+            letter.style.display = 'block';
+            setTimeout(() => { letter.style.display = 'none'; }, 2000);
+            if(count === 3) {
+                setTimeout(() => {
+                    document.getElementById('guide').innerText = "마음이 도착했어!";
+                    document.getElementById('drawer').classList.add('open');
+                    setTimeout(() => { document.getElementById('heart').classList.add('rise'); }, 600);
+                }, 1200);
+            }
+        }
+    </script>
+</body>
+</html>
